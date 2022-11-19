@@ -4,6 +4,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef struct dicStructure
+{
+	int	num;
+	char	*traduction;
+}		 dic_t;
+
+
 void	print(char c)
 {
 	write(1, &c, 1);
@@ -44,10 +51,8 @@ int	count_lines(char *file_name)
 	fd_to_read = open(file_name, O_RDONLY);
         while ((read(fd_to_read, &c, sizeof(c))) > 0)
  	{
-
 		if (c == '\n')
-			i ++;
-
+			i++;
 	}
 	close(fd_to_read);
 	return (i);
@@ -59,6 +64,7 @@ void	count_linesize(char *file_name, int *size_line)
 	int	i;
 	int	j;
 	int	f_;
+	int	fd_to_read;
 	char		c;
 
 	i = 0;
@@ -83,29 +89,15 @@ void	count_linesize(char *file_name, int *size_line)
         close(fd_to_read);
 }
 
-int	main()
+int	main(void)
 {
 	char	c;
-	char	**dictionnaire;
+	dic_t	*dic;
 	int	*size_line;
 	int	bytes;
 	int	fd_to_read;
 	int	size_of_file;	
 		
-		
-		
-
-//	int	fd_to_write = open("test.dict", O_WRONLY | O_CREAT, 0777);
-
-/*	if (argc == 1)
-	{
-	}
-	else if (argc == 2)
-	{
-	}
-	else
-	{
-	}*/
 	char	*ligne;
 	int	i;
 	int x;
@@ -116,34 +108,25 @@ int	main()
 	y = 0;
 	size_of_file = count_lines("numbers.dict");
 
-	
-	dictionnaire = malloc(sizeof(dictionnaire) * size_of_file);
+	size_line = (int*) malloc(size_of_file * sizeof(int));
 
-	ligne = malloc(sizeof(c)*100);
-	count_linesize("numbers.dict",*size_line); 
+	count_linesize("numbers.dict",size_line); 
 
 	fd_to_read = open("numbers.dict", O_RDONLY);
 	
-	while (i< size_of_file)
+	dic = (dic_t*) malloc(4 * sizeof(dic_t));
+	
+	while (i<4)
 	{
-		dictionnaire[i][0] = malloc(sizeof(int));
-		dictonnaire[i][1] = malloc(sizeof(c) * size_line[i]);
-		i++;
+		dic[i].traduction =  (char*) malloc(sizeof(char) * size_line[i]);
 	}
-	
-	
+
+	i =0;	
 	while ((bytes = read(fd_to_read, &c, sizeof(c))) > 0)
 	{
-		/*if (c == '!')
-		{
-			c = '!';
-		}*/
-		//write (fd_to_write, &c, sizeof(c));
 		if (c !=  ' ')
 		{
-			ligne[i] = c;
 			i++;
-//			print('z');
 			y++;
 		}
 		if (c == ':')
@@ -152,17 +135,12 @@ int	main()
 		}
 		if (c == '\n')
 		{	
-			ligne[i] = '\0';
 			printstr(ligne);
-			print('y');
-
 			i=0;
 			x++;
 			y = 0;
 		}
-//		print(' ');
 	}
 	close(fd_to_read);
-//	close(fd_to_write);
 	return (0);
 }
